@@ -7,6 +7,8 @@ import java.awt.event.MouseEvent;
 
 public class TelaPause extends JFrame {
 
+    private Sound pauseSound = new Sound("/sounds/pause.wav", false);
+
     // Método para carregar a fonte 8-bit
     private Font load8BitFont() {
         try {
@@ -20,6 +22,7 @@ public class TelaPause extends JFrame {
     }
     // Construtor da classe
     public TelaPause() {
+        pauseSound.play();
         // Configurações básicas da janela
         setSize(600, 400); // Define o tamanho da janela
         setUndecorated(true); // Remove a barra de título

@@ -17,7 +17,7 @@ public class Run extends javax.swing.JFrame implements Runnable{
     // teclas
     /* Funcionamento: quando a tecla é pressionada sua respectiva variável fica
     com valor True. Quando solta a variável fica com valor False. */
-    private boolean left, right, up, down, shoot, horde = false, mediumDeath = true, animationBoss = true, animationCap = true, bigDeath = true, shootPlusSpawn = false, exit = false;
+    private boolean left, right, up, down, shoot, horde = false, mediumDeath = true, animationBoss = true, animationCap = true, bigDeath = true, shootPlusSpawn = false, exit = false, risada = true, soundBoss = true;
     // Millis (função de tempo) para fazer o delay dos tiros
     Clock clock = Clock.systemDefaultZone();
     long millisSmall = clock.millis(), millisSmall2;
@@ -171,6 +171,8 @@ public class Run extends javax.swing.JFrame implements Runnable{
 
         // Objeto do som do loop do jogo
         Sound loopSound = new Sound("/sounds/loop2.wav", true);
+        // Objeto do som do loop da boss fight
+        Sound bossSound = new Sound("/sounds/bossFight2.wav", true);
 
         // ArrayList dos tiros do player
         ArrayList<Shoot> shootsPlayer = new ArrayList<>();
@@ -188,7 +190,7 @@ public class Run extends javax.swing.JFrame implements Runnable{
         // Objeto do player
         Player n = new Player(width/2, height, 12,9, 10, 0.18, width, height, "/images/nave_player.gif");
         // Objeto do boss
-        Boss b = new Boss(2, 2, 1000, 0.9, width, height, "/images/boss.png");
+        Boss b = new Boss(2, 2, 1, 0.9, width, height, "/images/boss.png");
         loopSound.play();
 
         // Animação inicial
@@ -224,7 +226,7 @@ public class Run extends javax.swing.JFrame implements Runnable{
         millisMedium2 = millisMedium;
 
         // Batalha inicial
-        while(score <= 50) {
+        while(score <= 1) {
             // Atualiza g
             g = getBufferStrategy().getDrawGraphics();
 
@@ -506,15 +508,27 @@ public class Run extends javax.swing.JFrame implements Runnable{
                 }
             }
 
+            loopSound.stop();
+
             // Animação inicial
             if(animationBoss) {
                 millisAnimation = clock.millis();
-                if ((millisAnimation - millisAnimation2) >= 2000)
+                if ((millisAnimation - millisAnimation2) >= 2000) {
+                    if(risada) {
+                        b.risada();
+                        risada = false;
+                    }
+                }
+                if ((millisAnimation - millisAnimation2) >= 7000) {
+                    if(soundBoss) {
+                        bossSound.play();
+                        soundBoss = false;
+                    }
                     if (n.animation2()) {
-                        if(b.getY() <= 170)
+                        if (b.getY() <= 170)
                             b.animation();
                         else {
-                            if(animationCap) {
+                            if (animationCap) {
                                 for (int i = 0; i < 4; i++)
                                     capsulas.add(new Capsula(b.getX() + (b.getWidth() / 2) - 27, b.getY() + (b.getHeight() / 2) - 50, 2, "images/capsula.png", height, width, 0.5, (byte) i));
                                 animationCap = false;
@@ -525,11 +539,12 @@ public class Run extends javax.swing.JFrame implements Runnable{
 
                                 c.setmillisShoot();
 
-                                if(c.capsulaAnimation())
+                                if (c.capsulaAnimation())
                                     animationBoss = false;
                             }
                         }
                     }
+                }
             } else if(b.getVida() > 0) {
                 // Boss fight
 
@@ -539,7 +554,7 @@ public class Run extends javax.swing.JFrame implements Runnable{
                     if ((millisDeath - millisDeath2) < 400)
                         g.drawImage(imgExplosion.getImage(), n.getX(), n.getY(), (int) (imgExplosion.getIconWidth() * 0.5), (int) (imgExplosion.getIconHeight() * 0.5), null);
                     else if ((millisDeath - millisDeath2) > 2500) {
-                        loopSound.stop();
+                        bossSound.stop();
                         new TelaGameOver();
                         dispose(); // Fecha a tela de jogo
                         break;
@@ -670,6 +685,7 @@ public class Run extends javax.swing.JFrame implements Runnable{
                     if ((millisDeathBoss - millisDeathBoss2) < 6000)
                         g.drawImage(explosionBig.getImage(), b.getX(), b.getY(), (int) (explosionBig.getIconWidth() * 1.5), (int) (explosionBig.getIconHeight() * 1.5), null);
                     else {
+                        bossSound.stop();
                         if(!exit) {
                             if (n.animation2())
                                 exit = true;

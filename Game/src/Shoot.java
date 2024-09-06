@@ -66,7 +66,7 @@ public class Shoot {
 
     public boolean move2(int destX, int destY) {
         // Calcula a diferença entre o destino e o tiro (cateto)
-        if(aux == false) {
+        if(!aux) {
             cateto1 = destX - x;
             cateto2 = destY - y;
         }
@@ -91,9 +91,7 @@ public class Shoot {
             y += (int) moveY;
             aux = true;
         }
-        if ((y >= screenHeight || (y + height) <= 0) || (x >= screenWidth || (x + width) <= 0))
-            return true;
-        return false;
+        return (y >= screenHeight || (y + height) <= 0) || (x >= screenWidth || (x + width) <= 0);
     }
 
     public int getWidth() {

@@ -28,7 +28,7 @@ public abstract class Nave {
     public boolean move() { return false; }
 
     public boolean atirar(int subTimeTiro, boolean enter) {
-        if((getmillisShoot() - getmillisShoot2()) > (getTimeTiro() - subTimeTiro) && enter) {
+        if((getmillisShoot() - getmillisShoot2()) > (getTimeTiro() - subTimeTiro) && enter && getVida() > 0) {
             shoot.play();
             setmillisShoot();
             return true;

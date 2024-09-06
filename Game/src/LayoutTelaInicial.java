@@ -6,7 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 class LayoutTelaInicial extends JFrame {
-    private Sound aberturaSound = new Sound("/sounds/abertura.wav", true);
+    private Sound aberturaSound = new Sound("/sounds/inicio.wav", true);
 
     // Método para carregar a fonte 8-bit ----------------------------------------------------------------------------
     private Font load8BitFont() {
@@ -57,7 +57,6 @@ class LayoutTelaInicial extends JFrame {
         gbc.anchor = GridBagConstraints.CENTER; // Centraliza o título no eixo X
         mainPanel.add(titleLabel, gbc); // Adiciona o título ao painel principal
 
-
         //FUNÇÕES BOTÕES: ------------------------------------------------------------------------------------------------------------
         // Botão Iniciar Jogo
         JButton startButton = createRoundedButton("Iniciar Jogo");
@@ -66,8 +65,20 @@ class LayoutTelaInicial extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 // Ação ao clicar no botão "Iniciar Jogo"
                 aberturaSound.stop();
-                new Run().setVisible(true); // Inicia o jogo
-                dispose();  // Fecha o menu
+                TelaTutorial telaTutorial = new TelaTutorial(); // Cria a tela de tutorial
+                telaTutorial.setVisible(true); // Exibe a tela de tutorial
+                dispose(); // Fecha o menu principal
+
+                // Timer para mostrar a tela do tutorial por alguns segundos (ex: 3000ms = 3 segundos)
+                Timer timer = new Timer(3000, new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        telaTutorial.dispose(); // Fecha a tela de tutorial
+                        new Run().setVisible(true); // Inicia o jogo
+                    }
+                });
+                timer.setRepeats(false); // Define o timer para executar apenas uma vez
+                timer.start(); // Inicia o timer
             }
         });
         gbc.gridy = 1;

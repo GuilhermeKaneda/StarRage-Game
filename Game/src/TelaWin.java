@@ -5,6 +5,8 @@ import java.awt.event.ActionListener;
 
 public class TelaWin extends JFrame{
 
+    private Sound finalSound = new Sound("/sounds/fim.wav", true);
+
     // Método para carregar a fonte 8-bit ----------------------------------------------------------------------------
     private Font load8BitFont() {
         try {
@@ -19,6 +21,7 @@ public class TelaWin extends JFrame{
 
     // Construtor da classe LayoutGameOver
     public TelaWin() {
+        finalSound.play();
         // Configurações básicas da janela
         setSize(1920, 1080); // Define o tamanho da janela
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Define a operação de fechar a janela
@@ -52,6 +55,7 @@ public class TelaWin extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Ação ao clicar no botão "Reiniciar Jogo"
+                finalSound.stop();
                 new Run().setVisible(true); // Reinicia o jogo
                 dispose();  // Fecha a tela de Game Over
             }
